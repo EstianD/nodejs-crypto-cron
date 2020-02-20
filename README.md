@@ -1,0 +1,1 @@
+Crypto cron to save hourly data
