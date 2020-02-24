@@ -7,10 +7,7 @@ const server = http.createServer(app)
 // CRON
 const runCron = require('./functions/crypto_cron')
 
-cron.schedule("1 * * * *", () => {
-  runCron()
-})
-
+runCron()
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

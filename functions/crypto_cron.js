@@ -52,8 +52,6 @@ const runCron = async () => {
    })
 
    const savedTrade = await trade.save()
-
-   console.log(savedTrade.toJSON())
    
 }
 
