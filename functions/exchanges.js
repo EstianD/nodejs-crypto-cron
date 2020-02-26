@@ -1,20 +1,6 @@
 const axios = require('axios')
 const config = require('../utils/config')
-
-// EXCHANGE LINKS
-// KRAKEN
-// const krakenBtcEurLink = "https://api.cryptowat.ch/markets/kraken/btceur/price"
-// BITSTAMP
-// const bitstampBtcUsdLink = "https://api.cryptowat.ch/markets/bitstamp/btcusd/price"
-// LUNO
-// const lunoBtcLink = "https://api.mybitx.com/api/1/ticker?pair=XBTZAR"
-
-// CONVERSION LINK
-// USD/ZAR
-// const usdZarConversionLink = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=ZAR&apikey=PUE3PZ1B5KZATT8E"
-// EUR/ZAR
-// const eurZarConversionLink = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=EUR&to_currency=ZAR&apikey=PUE3PZ1B5KZATT8E"
-
+const Exchange = require('../models/exchange')
 
 const getDateTimestamp = () => {
    Date.prototype.getUnixTime = function() { return this.getTime()/1000|0 };
@@ -28,10 +14,12 @@ const getDateTimestamp = () => {
    const year = t.getFullYear()
    const month = t.getMonth() 
    const day = t.getDate()
-   const hour = t.getHours()
+   const hours = t.getHours()
+   const minutes = t.getMinutes()
+   const seconds = t.getSeconds()
    
    // CONVERT DATE TO TIMESTAMP
-   let timestamp = new Date(year, month, day, hour).getUnixTime()
+   let timestamp = new Date(year, month, day, hours, minutes, seconds).getUnixTime()
 
    return timestamp
 }
@@ -61,20 +49,10 @@ const getLunoPrice = async () => {
    return lunoPrice
 }
 
-const usdZarExchangeRate = async () => {
-   const usdZarExchangeRate = await axios.get(config.USDZAR_LINK)
-
-   const usdZarRate = parseFloat(usdZarExchangeRate.data['Realtime Currency Exchange Rate']['5. Exchange Rate']).toFixed(2)
-
-   return usdZarRate
-}
-
-const eurZarExchangeRate = async () => {
-   const eurZarExchangeRate = await axios.get(config.EURZAR_LINK)
-
-   const eurZarRate = parseFloat(eurZarExchangeRate.data['Realtime Currency Exchange Rate']['5. Exchange Rate']).toFixed(2)
-
-   return eurZarRate
+const getExchangeRates = async () => {
+   const exchange = await Exchange.findOne({ tag: 1 })
+   
+   return exchange.exchangeRate
 }
 
 module.exports = {
@@ -82,6 +60,5 @@ module.exports = {
    getKrakenPrice,
    getBitstampPrice,
    getLunoPrice,
-   usdZarExchangeRate,
-   eurZarExchangeRate
+   getExchangeRates
 }

@@ -19,23 +19,20 @@ const runCron = async () => {
    const lunoPriceZar = await customFunction.getLunoPrice()
 
    // USD/ZAR CONVERSION RATE
-   const usdZarExchangeRate = await customFunction.usdZarExchangeRate()
+   // const usdZarExchangeRate = await customFunction.usdZarExchangeRate()
 
    // EUR/ZAR CONVERSION RATE
-   const eurZarExchangeRate = await customFunction.eurZarExchangeRate()
+   // const eurZarExchangeRate = await customFunction.eurZarExchangeRate()
 
-   console.log(timestamp)
-   console.log(krakenPrice)
-   console.log(bitstampPrice)
-   console.log(lunoPriceZar)
-   console.log(usdZarExchangeRate)
-   console.log(eurZarExchangeRate)
+   const exchangeRates = await customFunction.getExchangeRates()
+
+   // console.log(exchangeRates)
 
    const trade = new Crypto({
       timestamp: timestamp,
       exchangeRate: {
-         "usd": usdZarExchangeRate,
-         "eur": eurZarExchangeRate
+         "usd": exchangeRates.usd,
+         "eur": exchangeRates.eur
       },
       luno: {
          price: lunoPriceZar,
@@ -52,7 +49,8 @@ const runCron = async () => {
    })
 
    const savedTrade = await trade.save()
-   
+
+   // console.log(savedTrade.toJSON())
 }
 
 module.exports = runCron

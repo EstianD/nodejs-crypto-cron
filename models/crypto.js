@@ -20,6 +20,10 @@ const cryptoSchema = new mongoose.Schema({
    bitstamp: {
       price: String,
       symbol: String
+   },
+   createdAt: {
+      type: Date,
+      default: Date.now
    }
 })
 
